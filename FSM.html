@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>VHDL Coder: FSM</title>
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<style>
+		.butt{
+			width:110px;
+			height: 45px;
+			float:left;	
+		}
+	</style>
+	<body style="background-color: seashell;">
+		<div style="height: 70px; width: 100%; float: left; background-color: #eeeeee; box-shadow: 0px 6px 5px #888888; position: fixed;">
+			<a href="Main_Page.html">
+				<img src="images/logo.png" style="width: 200px; height: 70px; float: left;">
+			</a>
+			<h2 style="position: relative;float:left;margin-top:10px;left:20%;">
+				Finite State Machine (FSM)
+			</h2>
+			<a href="signup.html" target="_blank" style="text-decoration: none;">
+				<button type="submit" style="float: right; margin-right: 20px; margin-top: 10px; background-color: white;">
+					Sign-Up
+				</button>
+			</a>
+			<a href="login.html" target="_blank" style="text-decoration: none;">
+				<button type="submit" style="float: right; margin-right: 20px; margin-top: 10px; background-color: teal;">
+					Log-In
+				</button>
+			</a>
+		</div>
+		<div style="width: 50%; float:left; margin-top: 160px; margin-left:10px;">
+			<div id = "Field" style="width: 100%;border-radius: 5px;border-color: black;border-style: solid;border-width: 2px;">
+				<div id="lside" style="height: 415px; width: 80%;float: left; border-color: black;border-style: solid;border-width: 2px; background-color: white;">
+				</div>
+				<div id="rside" style="width: 20%;height: 415px; float: right; border-color: black;border-style: solid;border-width: 2px; background-color: rgb(0,0,0,0.2);">
+					<br>
+					<div id = "add" class="butt" onclick="displayState0()">
+						<button type="submit" style="background-color: teal;">
+							State+
+						</button>
+						<p style="text-align: center;font-size: 12px;">Output: 0</p>
+					</div>
+					<br><br><br>
+					<div id = "add" class="butt" onclick="displayState1()">
+						<button type="submit" style="background-color: teal;">
+							State+
+						</button>
+						<p style="text-align: center;font-size: 12px;">Output: 1</p>
+					</div>
+					<br><br><br>
+					<div id = "clear" class="butt" onclick="fclear()">
+						<button type="submit" style="background-color: turquoise; margin-left: 5px;">
+							Clear
+						</button>
+					</div>
+					<br><br><br>
+					<div id = "convert" class="butt" style="height:75px;" onclick="writetofinal()">
+						<button type="submit" style="background-color: cyan; margin-left: 8px;">
+							Code
+						</button>
+					</div>
+					<br><br><br><br>
+				</div>
+				<div style="background-color: rgb(0,0,0,0.2); float: left; width: 100%; border-style: solid;border-width: 2px;border-color: black;">
+					<form id="connect" name="connect">
+						<h3 style="float: left; margin-top:17px;">
+							State &nbsp
+						</h3>
+						<input type="number" name="start" style="width:50px; float: left; margin-top:17px;" required>
+						<h3 style="float:left; margin-top:17px;">
+							&nbsp to State &nbsp
+						</h3>
+						<input type="number" name="destination" style="float:left;width:50px; margin-top:17px;" required>
+						<h3 style="float:left; margin-top: 17px;">
+							&nbsp when &nbsp &nbsp &nbsp &nbsp &nbsp
+						</h3>
+						<p style="float:left;margin-top:22px;">
+							Low &nbsp
+						</p>
+						<input type="range" id = "hilo" name = "hilo" min="0" max = "1" style="float:left; width: 50px;margin-top:28px;" required>
+						<p style="float:left; margin-top:22px;">
+							&nbsp High
+						</p>
+					</form>
+					<button type="submit" style="background-color: lightsteelblue;float: right; margin-right: 20px; margin-top:-20px;" onclick="connector()">
+						Connect
+					</button>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div style="width: 49%; float: left; margin-top: 50px; ">
+			<br><br>
+			<div style="height: 575px; width: 90%; margin: auto; background-color: rgb(0,0,0,0.2);border-radius: 5px;">
+				<div style="float: left; width: 100%;">
+				<h2 style="float: left; margin-top: 10px; margin-left:10px;">Your FSM as VHDL Code:</h2>
+				<button type = "submit" onclick="dclear()" style="background-color: white; float: right; margin-top:10px; margin-right: 5px;">
+					Clear Code Field
+				</button>
+				</div>
+				<div id = "finalcode" style="float:left; margin-left:20px;">
+					<p>library ieee;<br>use ieee.std_logic_1164.all;<br></p>
+				</div>
+			</div>
+		</div>
+		<br><br><br><br><br><br>
+	</body>
+	<script>
+		var stateCount = 0;
+		var initial = 0;
+		var destination = 0;
+		var signal = 0;
+		var count = 0;
+		var c_str = " ";
+		var output_arr = [];
+		var connection_arr = [];
+		var connection_count = 0;
+		var ctr = 0;
+		var ctr2 = 0;
+		var divct = 1;
+		var confn_ct = 1;
+		function displayState0() {
+			document.getElementById('lside').innerHTML += "<div id='state"+String(divct)+"' style='border-radius:50%;border-color:black;border-width:2px;border-style:solid;height:100px;width:100px;float:left;margin-left:25px;margin-top:15px;'><h2 style='text-align:center;margin-top:15px;'>S"+(stateCount+1)+"</h2><p style='font-size:10px;text-align:center;margin-top: 0 px;'>output=0</p></div>";
+			document.getElementById('state'+String(divct)).innerHTML += "<div id='statehold"+String(divct)+"' style='margin-top: -70px; margin-left:10px; height:15px; width: 80px;'></div>";
+			stateCount = stateCount + 1;
+			output_arr += 1;
+			divct += 1
+		}
+		function displayState1() {
+			document.getElementById('lside').innerHTML += "<div id='state"+String(divct)+"' style='border-radius:50%;border-color:black;border-width:2px;border-style:solid;height:100px;width:100px;float:left;margin-left:25px;margin-top:15px;'><h2 style='text-align:center;margin-top:15px;'>S"+(stateCount+1)+"</h2><p style='font-size:10px;text-align:center;margin-top: 0 px;'>output=1</p></div>";
+			document.getElementById('state'+String(divct)).innerHTML += "<div id='statehold"+String(divct)+"' style='margin-top: -70px; margin-left:10px; height:15px; width: 80px;'></div>";
+			stateCount = stateCount + 1;
+			output_arr += 1;
+			divct += 1
+		}
+		function fclear(){
+			document.getElementById('lside').innerHTML = " ";
+			stateCount = 0;
+			connection_arr = [];
+			connection_count = 0;
+			ctr = 0;
+			ctr2 = 0;
+			divct = 1;
+			confn_ct = 1;
+		}
+		function dclear(){
+			document.getElementById('finalcode').innerHTML = "library ieee;<br>use ieee.std_logic_1164.all;<br>"
+		}
+		function connector(){
+			if ((document.forms["connect"]["start"].value > stateCount) || (document.forms["connect"]["start"].value <= 0) || (document.forms["connect"]["destination"].value > stateCount) || (document.forms["connect"]["destination"].value <= 0)) {
+				alert("Make sure the states you chose are in range.");
+				return;
+			}
+			initial = document.forms["connect"]["start"].value;
+			destination = document.forms["connect"]["destination"].value;
+			signal = document.forms["connect"]["hilo"].value;
+			connection_arr += initial + destination + signal;
+			connection_count += 1;
+			if (signal == 1){
+				document.getElementById(('statehold'+String(initial))).innerHTML += "<div style='float: left; border-radius: 50%; background-color: lightgreen; height:15px; width: 15px;'></div>";
+				document.getElementById(('statehold'+String(destination))).innerHTML += "<div style='float: left; border-radius: 50%; background-color: green; height:15px; width: 15px;'></div>";
+			}
+			else {
+				document.getElementById(('statehold'+String(initial))).innerHTML += "<div style='float: left; border-radius: 50%; background-color: red; height:15px; width: 15px;'></div>";
+				document.getElementById(('statehold'+String(destination))).innerHTML += "<div style='float: left; border-radius: 50%; background-color: maroon; height:15px; width: 15px;'></div>";
+			}
+		}
+		function writetofinal(){
+			if (stateCount <= 1) {
+				alert("You need more states");
+				return;
+			}
+			document.getElementById('finalcode').innerHTML = "library ieee;<br>use ieee.std_logic_1164.all;<br>";
+			document.getElementById('finalcode').innerHTML += "<br>entity FSM is<br> &nbsp &nbsp port(clk, signal : in std_logic;<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp output &nbsp &nbsp &nbsp : out std_logic);<br>end entity;<br>"
+			document.getElementById('finalcode').innerHTML += "<br>architecture Behavioral of FSM is<br> &nbsp &nbsp type state_type is ("+calcStates()+");<br> &nbsp &nbsp signal state, next_state : state_type;<br>begin"
+			document.getElementById('finalcode').innerHTML += "<br> &nbsp &nbsp process(clk) <br> &nbsp &nbsp begin <br> &nbsp &nbsp &nbsp &nbsp if rising_edge(clk) then<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp state <= next_state; <br> &nbsp &nbsp &nbsp &nbsp end if; <br> &nbsp &nbsp end process;"
+			document.getElementById('finalcode').innerHTML += "<br> &nbsp &nbsp process(state,signal)<br> &nbsp &nbsp begin <br> &nbsp &nbsp &nbsp &nbsp case state is"
+			var sc = 1;
+			var out = 0;
+			while (sc < (stateCount+1)){
+				ctr = 0;
+				if (output_arr[sc-1] == 0) {
+					out = 0;
+				}
+				else if (output_arr[sc-1] == 1){
+					out = 1;
+				}
+				document.getElementById('finalcode').innerHTML += "<br> &nbsp &nbsp &nbsp &nbsp when S"+sc+"=>"
+				document.getElementById('finalcode').innerHTML += "<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp output <= '"+out+"';"
+				while (true) {
+					ctr2 = 0;
+					if (connection_arr[ctr] == sc){
+						document.getElementById('finalcode').innerHTML += "<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp if signal = '"+connection_arr[ctr+2]+"' then <br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp next_state <= S"+connection_arr[ctr+1]
+						while (true) {
+							if (ctr2 == ctr) {
+								ctr2 += 3;
+							}
+							if (connection_arr[ctr2] == sc) {
+								document.getElementById('finalcode').innerHTML += ";<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp else <br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp next_state <= S"+connection_arr[ctr2+1]+";<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp end if;"
+								break
+							}
+							else {
+								ctr2 += 3
+							}
+							if (ctr2 > 100){
+								break
+							}
+						}
+						break
+					}
+					else{
+						ctr += 3;
+						if (ctr > 100){
+							break
+						}
+					}
+				}
+				sc += 1;	
+			}
+			document.getElementById('finalcode').innerHTML += "<br> &nbsp &nbsp &nbsp &nbsp end case; <br>&nbsp &nbsp end process;<br>end Behavioral "
+		}
+		function calcStates(){
+			while (count != stateCount) {
+				c_str += "S"+(count+1)+","
+				count += 1
+			}
+			return c_str.substring(0, c_str.length - 1);
+		}
+	</script>
+	<noscript>
+		Your computer does not support JavaScript.
+	</noscript>
+</html>
